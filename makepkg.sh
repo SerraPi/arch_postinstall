@@ -57,16 +57,6 @@ is_j_value_present() {
     return 1
 }
 
-add_sed_command() {
-    sed_commands+=("$1")
-}
-
-execute_sed_commands() {
-    for cmd in "${sed_commands[@]}"; do
-        eval "$cmd"
-    done
-}
-
 uncomment_makeflags() {
     add_sed_command "sudo sed -i -e '/^\s*#.*MAKEFLAGS/s/^#//' \"$makepkg_conf\""
     display_message "Uncommenting MAKEFLAGS in $makepkg_conf"
@@ -84,6 +74,16 @@ add_j_flag_if_missing() {
         add_sed_command "sudo sed -i -e 's/^\s*MAKEFLAGS\s*=\s*\"\(.*\)\"/MAKEFLAGS=\"-j$num_threads\"/' \"$makepkg_conf\""
     fi
     display_message "Adding -j$num_threads to $makepkg_conf (MAKEFLAGS)"
+}
+
+add_sed_command() {
+    sed_commands+=("$1")
+}
+
+execute_sed_commands() {
+    for cmd in "${sed_commands[@]}"; do
+        eval "$cmd"
+    done
 }
 
 display_message() {
